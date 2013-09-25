@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> Nha traffic </title>
+	 <meta name="viewport" content="width=device-width,height=device-height initial-scale=1.0,maximum-scale=1.0, user-scalable=no;" />    
+	 <meta http-equiv="Content-type" content="text/html;  charset=utf-8"> 
+			<!-- leaflet framework  -->
+	<link rel="stylesheet" 	type="text/css" 	href="leaflet/leaflet.css">
+	<link rel="stylesheet" 	type="text/css" 	href="css/map.css">
+	<script type="text/javascript" 				src = "leaflet/leaflet.js"> </script>
+			<!-- Jquery Mobile  -->
+	<link 	rel="stylesheet" 	type="text/css" href="4mobile/jquery.mobile-1.3.2.min.css">
+	<script type="text/javascript" src="4mobile/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="4mobile/jquery.mobile-1.3.2.min.js"></script>
+		<!-- Phonegap  -->
+	<script src = "phonegap.js" > </script>
+	<script type="text/javascript" charset="utf-8"> 
+		var pgr = false;
+		function onBodyLoad() {             
+			//alert("onBodyLoad");            
+			document.addEventListener("deviceready", onDeviceReady, false);      
+		}
+	//var clat = 10.774332;
+	//var clng = 106.661664;
+	function onDeviceReady() {            
+		//alert("onDeviceReady");        
+		pgr = true;      
+	}
+	function getLocation() {        
+		alert("getLocation");        
+		if(pgr == true) {          
+			var locOptions = {timeout : 5000, enableHighAccuracy : false};          
+			//get the current location          
+			navigator.geolocation.getCurrentPosition( onGeolocationSuccess, onGeolocationError,locOptions);          
+		} else {          
+			alert("Please wait,\nPhoneGap is not ready.");        
+		}      
+	}
+	function onGeolocationSuccess(loc) {        
+		alert("onLocationSuccess");
+		var lat = loc.coords.latitude;
+		var lng = loc.coords.longitude ;
+		// add an OpenStreetMap tile layer
+		var url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+			osmAttribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors', 
+			osm 	= new L.tileLayer(url, {attribution:osmAttribution }),
+			latlng = new L.LatLng(lat, lng);
+		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
+			cloudmadeAttribution = 'Traffic',
+			traffic   = new L.tileLayer(cloudmadeUrl, {styleId: 22677, attribution: cloudmadeAttribution});
+
+		var map = new L.map('map').addLayer(osm).setView([lat, lng], 13);
+
+		// add a marker in the given location, attach some popup content to it and open the popup
+		var marker = new L.marker([lat, lng]);
+		map.addLayer(marker);
+		marker.bindPopup("Hello! <br /> I'm here")
+			  .openPopup(); 
+		//GeoLayer
+		var layersControl = new L.Control.Layers({
+			'OSM Fresh': osm,
+			'OSM Traffic': traffic
+		});
+
+		map.addControl(layersControl);
+		map.addControl(new L.Control.Scale());
+	}
+	 function onGeolocationError(e) {        
+		alert("Geolocation error: #" + e.code + "\n" +  e.message);      
+	}
+	</script>
+  </head>
+   <body onload="onBodyLoad()"> 
+		<div data-role="header">
+			<a href="#" data-role="button" data-icon="bars" data-iconpos="notext" data-iconshadow="false" data-inline="true"></a>
+				<h1>Traffic HCM</h1>
+			<a href="#" data-role="button" onclick="getLocation()" data-icon="gear" data-theme="b">Me</a>	
+		</div>
+		<div data-role="content" >
+			<div id = "map" style = "height:700px"> </div>
+		</div>
+		<div data-role="footer" data-position = "fixed" >
+			
+		</div>
+ </body>
+</html>
+
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
