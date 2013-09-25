@@ -39,29 +39,18 @@
 		var lat = loc.coords.latitude;
 		var lng = loc.coords.longitude ;
 		// add an OpenStreetMap tile layer
+		var map = L.map('map').setView([lat, lng], 15);
 		var url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-			osmAttribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors', 
-			osm 	= new L.tileLayer(url, {attribution:osmAttribution }),
-			latlng = new L.LatLng(lat, lng);
-		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
-			cloudmadeAttribution = 'Traffic',
-			traffic   = new L.tileLayer(cloudmadeUrl, {styleId: 22677, attribution: cloudmadeAttribution});
-
-		var map = new L.map('map').addLayer(osm).setView([lat, lng], 13);
-
+			osmAttribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+		L.tileLayer(url, {
+			attribution: osmAttribution
+			}).addTo(map);		
 		// add a marker in the given location, attach some popup content to it and open the popup
 		var marker = new L.marker([lat, lng]);
 		map.addLayer(marker);
 		marker.bindPopup("Hello! <br /> I'm here")
 			  .openPopup(); 
-		//GeoLayer
-		var layersControl = new L.Control.Layers({
-			'OSM Fresh': osm,
-			'OSM Traffic': traffic
-		});
-
-		map.addControl(layersControl);
-		map.addControl(new L.Control.Scale());
+		
 	}
 	 function onGeolocationError(e) {        
 		alert("Geolocation error: #" + e.code + "\n" +  e.message);      
