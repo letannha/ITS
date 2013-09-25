@@ -9,9 +9,9 @@
 	<link rel="stylesheet" 	type="text/css" 	href="css/map.css">
 	<script type="text/javascript" 				src = "leaflet/leaflet.js"> </script>
 			<!-- Jquery Mobile  -->
-	<link 	rel="stylesheet" 	type="text/css" href="4mobile/jquery.mobile-1.3.2.min.css">
-	<script type="text/javascript" src="4mobile/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src="4mobile/jquery.mobile-1.3.2.min.js"></script>
+	<link 	rel="stylesheet" 	type="text/css" href="js/jquery.mobile-1.3.2.min.css">
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.3.2.min.js"></script>
 		<!-- Phonegap  -->
 	<script src = "phonegap.js" > </script>
 	<script type="text/javascript" charset="utf-8"> 
@@ -20,8 +20,6 @@
 			//alert("onBodyLoad");            
 			document.addEventListener("deviceready", onDeviceReady, false);      
 		}
-	//var clat = 10.774332;
-	//var clng = 106.661664;
 	function onDeviceReady() {            
 		//alert("onDeviceReady");        
 		pgr = true;      
@@ -77,7 +75,7 @@
 			<a href="#" data-role="button" onclick="getLocation()" data-icon="gear" data-theme="b">Me</a>	
 		</div>
 		<div data-role="content" >
-			<div id = "map" style = "height:700px"> </div>
+			<div id = "map" style = "height:800px"> </div>
 		</div>
 		<div data-role="footer" data-position = "fixed" >
 			
