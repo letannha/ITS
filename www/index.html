@@ -8,26 +8,33 @@
 	<link rel="stylesheet" 	type="text/css" 	href="leaflet/leaflet.css">
 	<link rel="stylesheet" 	type="text/css" 	href="css/map.css">
 	<script type="text/javascript" 				src = "leaflet/leaflet.js"> </script>
+	
 			<!-- Jquery Mobile  -->
+	<link rel="stylesheet" type="text/css" 		href="css/style.css">
 	<link 	rel="stylesheet" 	type="text/css" href="js/jquery.mobile-1.3.2.min.css">
 	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="js/jquery.mobile-1.3.2.min.js"></script>
 		<!-- Phonegap  -->
 	<script src = "phonegap.js" > </script>
 	<script type="text/javascript" charset="utf-8"> 
-		var pgr = false;
+	var pgr = false;
+	var map;
+	
 		function onBodyLoad() {             
 			//alert("onBodyLoad");            
 			document.addEventListener("deviceready", onDeviceReady, false);      
 		}
+	
 	function onDeviceReady() {            
 		//alert("onDeviceReady");        
-		pgr = true;      
+		pgr = true; 
+		getLocation();
 	}
+	
 	function getLocation() {        
-		alert("getLocation");        
+		//alert("getLocation");        
 		if(pgr == true) {          
-			var locOptions = {timeout : 5000, enableHighAccuracy : false};          
+			var locOptions = {timeout : 5000, enableHighAccuracy : true};          
 			//get the current location          
 			navigator.geolocation.getCurrentPosition( onGeolocationSuccess, onGeolocationError,locOptions);          
 		} else {          
@@ -39,36 +46,158 @@
 		var lat = loc.coords.latitude;
 		var lng = loc.coords.longitude ;
 		// add an OpenStreetMap tile layer
-		var map = L.map('map').setView([lat, lng], 15);
-		var url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-			osmAttribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
-		L.tileLayer(url, {
-			attribution: osmAttribution
-			}).addTo(map);		
+		map = new L.Map('map');
+
+		// create the tile layer with correct attribution
+		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		var osmAttrib='Map data © OpenStreetMap contributors';
+		var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 16, attribution: osmAttrib});		
+
+		// start the map in South-East England
+		map.setView(new L.LatLng(lat, lng),14);
+		map.addLayer(osm);
+		
 		// add a marker in the given location, attach some popup content to it and open the popup
 		var marker = new L.marker([lat, lng]);
 		map.addLayer(marker);
 		marker.bindPopup("Hello! <br /> I'm here")
 			  .openPopup(); 
-		
-	}
+		var marker2 = new L.marker([10.772666, 106.657888]);
+		map.addLayer(marker2);
+	}	
 	 function onGeolocationError(e) {        
 		alert("Geolocation error: #" + e.code + "\n" +  e.message);      
 	}
+	/*function getData() {
+		for (var i = 0, latlngs = [], len = route.length; i < len; i++) {
+			latlngs.push(new L.LatLng(route[i][0], route[i][1]));
+		}
+		var path = new L.Polyline(latlngs, {smoothFactor: 1});
+
+		map.fitBounds(new L.LatLngBounds(latlngs));
+
+		map.addLayer(new L.Marker(latlngs[0]));
+		map.addLayer(new L.Marker(latlngs[latlngs.length - 1]));
+
+		map.addLayer(path);
+		}		*/
 	</script>
   </head>
    <body onload="onBodyLoad()"> 
-		<div data-role="header">
-			<a href="#" data-role="button" data-icon="bars" data-iconpos="notext" data-iconshadow="false" data-inline="true"></a>
-				<h1>Traffic HCM</h1>
-			<a href="#" data-role="button" onclick="getLocation()" data-icon="gear" data-theme="b">Me</a>	
-		</div>
+		<!-- start homepage -->
+	<div data-role="page" id="home">
+		<div data-role="header" data-theme="none" data-position="fixed">
+        	<div class="ui-grid-b">
+                <div class="ui-block-a"><div class="ui-bar logo"></div></div>
+                <div class="ui-block-b"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#add-form"><div class="icon-alert"></div></a></div>
+                <div class="ui-block-c"><a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="check" data-theme="e" data-transition="pop">Sign in</a></div>
+            </div><!-- /grid-b -->
+        </div><!-- header -->
+									<!-- Load Map ---->
 		<div data-role="content" >
-			<div id = "map" style = "height:800px"> </div>
+			<div id = "map" style="height:800px"> </div>
 		</div>
-		<div data-role="footer" data-position = "fixed" >
-			
-		</div>
+		
+		 <div data-role="footer" data-theme="none" data-position="fixed">
+        	<div class="ui-grid-c">
+                <div class="ui-block-a"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#traffic-display-form"><div class="traffic-jam"></div></a></div>
+                <div class="ui-block-b"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#alert-nav"><div class="alert-traffic"></div></a></div>
+                <div class="ui-block-c"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#extra-nav"><div class="extra-function"></div></a></div>
+                <div class="ui-block-d"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#help-nav" data-rel="popup" data-transition="flip"><div class="support"></div></a></div>
+            </div><!-- /grid-c -->
+        </div><!-- footer -->
+		
+		<div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="traffic-display-form">
+            <div class="ui-field-contain">
+    			<label for="slider-1"><b>BÁN KÍNH HIỂN THỊ</b>&nbsp;<i>(km)</i></label>
+    			<input type="range" name="slider-1" id="slider-1" value="5" min="0" max="10" data-highlight="true">
+			<br/><br/>
+            <fieldset data-role="controlgroup" data-mini="true" >
+                <legend><b>CHỌN TÌNH TRẠNG HIỂN THỊ</b></legend>
+                <input type="checkbox" name="checkbox-a" id="checkbox-a" data-theme="e" checked>
+                <label for="checkbox-a">Kẹt Xe</label>
+                <input type="checkbox" name="checkbox-b" id="checkbox-b" data-theme="e">
+                <label for="checkbox-b">Lưu Thông Chậm</label>
+                <input type="checkbox" name="checkbox-c" id="checkbox-c" data-theme="e">
+                <label for="checkbox-c">Thông Thoáng</label>
+    		</fieldset>
+            <br/><br/>
+            <fieldset data-role="controlgroup" data-mini="true" >
+                <legend><b>CHỌN KIỂU HIỂN THỊ</b></legend>
+                <input type="radio" name="display" id="radio-a" data-theme="b">
+                <label for="radio-a">Danh Sách Liệt Kê</label>
+                <input type="radio" name="display" id="radio-b" data-theme="b" checked>
+                <label for="radio-b">Bản Đồ Trực Quan</label>
+    		</fieldset>
+            <br/><br/>
+            <div class="ui-grid-a">
+                    <div class="ui-block-a"><a href="#" data-rel="close" data-role="button" data-theme="c" data-mini="true">Reset</a></div>
+                    <div class="ui-block-b"><a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true">OK</a></div>
+                </div>
+            </div>
+        </div><!-- /panel -->
+		
+		 <div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="alert-nav">
+         
+         </div><!-- /panel -->
+         
+         <div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="extra-nav">
+         
+         </div><!-- /panel -->
+         
+         <div data-role="popup" id="help-nav">
+            <ul data-role="listview" data-inset="true" style="min-width:210px;">
+                <li data-theme="a"><a href="#" >Hướng dẫn Tracking</a></li>
+                <li data-theme="a"><a href="#" >Hướng dẫn Thiết lập cảnh báo</a></li>
+                <li data-theme="a"><a href="#" >Hướng dẫn Chế độ hiển thị</a></li>
+                <li data-theme="a"><a href="#" >Sử dụng chức năng mở rộng</a></li>
+                <li data-theme="a"><a href="#" >Hỏi đáp từ người dùng</a></li>
+            </ul>
+		</div> 
+
+        <div data-role="popup" id="popupLogin" data-theme="e" class="ui-corner-all">
+            <form>
+                <div style="padding:10px 20px;">
+                    <h3>Please sign in</h3>
+                    <label for="un" class="ui-hidden-accessible">Username:</label>
+                    <input type="text" name="user" id="un" value="" placeholder="username" data-theme="a">
+                    <label for="pw" class="ui-hidden-accessible">Password:</label>
+                    <input type="password" name="pass" id="pw" value="" placeholder="password" data-theme="a">
+                    <button type="submit" data-theme="b" data-icon="check">Sign in</button>
+                </div>
+            </form>
+        </div>               
+         
+        <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="b" id="add-form">
+            <form class="userform">
+                <h2>Login</h2>
+                <label for="name">Username:</label>
+                <input type="text" name="name" id="name" value="" data-clear-btn="true" data-mini="true">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" value="" data-clear-btn="true" autocomplete="off" data-mini="true">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a"><a href="#" data-rel="close" data-role="button" data-theme="c" data-mini="true">Cancel</a></div>
+                    <div class="ui-block-b"><a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true">Save</a></div>
+                </div>
+            </form>
+        </div><!-- /panel -->
+	</div>
+    
+    <section data-role="page" id="panel-fixed-page2" data-url="panel-fixed-page2" tabindex="0" class="ui-page ui-body-c" style="min-height: 438px;">
+    
+        <div data-role="header" data-theme="e">
+            <h1 class="ui-title">Landing page</h1>
+        </div><!-- /header -->
+    
+        <div data-role="content" class="ui-content">
+    
+            <p>This is just a landing page.</p>
+    
+            <a href="index.html" data-role="button" data-inline="true" data-mini="true" data-icon="back" data-iconpos="left" data-theme="c" ><span><span class="ui-btn-text">Back</span><span >&nbsp;</span></span></a>
+    
+        </div><!-- /content -->
+    
+    </section><!-- /page -->
  </body>
 </html>
 
