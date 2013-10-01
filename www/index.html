@@ -68,7 +68,7 @@
 	 function onGeolocationError(e) {        
 		alert("Geolocation error: #" + e.code + "\n" +  e.message);      
 	}
-	/*function getData() {
+	function getData() {
 		for (var i = 0, latlngs = [], len = route.length; i < len; i++) {
 			latlngs.push(new L.LatLng(route[i][0], route[i][1]));
 		}
@@ -80,34 +80,34 @@
 		map.addLayer(new L.Marker(latlngs[latlngs.length - 1]));
 
 		map.addLayer(path);
-		}		*/
+		}		
 	</script>
   </head>
    <body onload="onBodyLoad()"> 
 		<!-- start homepage -->
-	<div data-role="page" id="home">
-		<div data-role="header" data-theme="none" data-position="fixed">
+	<section data-role="page" id="map-page" data-url="map-page">
+		<div data-role="header" data-theme="none" data-position="fixed" data-fullscreen="true">
         	<div class="ui-grid-b">
                 <div class="ui-block-a"><div class="ui-bar logo"></div></div>
-                <div class="ui-block-b"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#add-form"><div class="icon-alert"></div></a></div>
-                <div class="ui-block-c"><a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="check" data-theme="e" data-transition="pop">Sign in</a></div>
+                <div class="ui-block-b"><a href="#confirm-popup" data-role="button" data-rel="popup" data-position-to="window" data-theme="none" data-corners="false" data-shadow="false" data-inline="true"><div class="icon-alert"></div></a></div>
+                <div class="ui-block-c"><a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="forward" data-theme="b" data-transition="slidedown">Follow</a></div>
             </div><!-- /grid-b -->
         </div><!-- header -->
-									<!-- Load Map ---->
-		<div data-role="content" >
-			<div id = "map" style="height:800px"> </div>
-		</div>
-		
-		 <div data-role="footer" data-theme="none" data-position="fixed">
+        
+        <div data-role="content" id="map" style="height:800px;">
+            
+        </div><!-- content -->
+        
+        <div data-role="footer" data-theme="none" data-position="fixed">
         	<div class="ui-grid-c">
                 <div class="ui-block-a"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#traffic-display-form"><div class="traffic-jam"></div></a></div>
                 <div class="ui-block-b"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#alert-nav"><div class="alert-traffic"></div></a></div>
-                <div class="ui-block-c"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#extra-nav"><div class="extra-function"></div></a></div>
+                <div class="ui-block-c"><a data-role="button" data-position-to="window" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#extra-nav" data-rel="popup" data-transition="flip"><div class="extra-function"></div></a></div>
                 <div class="ui-block-d"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#help-nav" data-rel="popup" data-transition="flip"><div class="support"></div></a></div>
             </div><!-- /grid-c -->
         </div><!-- footer -->
-		
-		<div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="traffic-display-form">
+        
+        <div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="traffic-display-form">
             <div class="ui-field-contain">
     			<label for="slider-1"><b>BÁN KÍNH HIỂN THỊ</b>&nbsp;<i>(km)</i></label>
     			<input type="range" name="slider-1" id="slider-1" value="5" min="0" max="10" data-highlight="true">
@@ -136,38 +136,64 @@
                 </div>
             </div>
         </div><!-- /panel -->
-		
-		 <div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="alert-nav">
+        
+        <div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="alert-nav">
          
-         </div><!-- /panel -->
+        </div><!-- /panel -->
          
-         <div data-role="panel" data-display="overlay" data-position-fixed="true" data-theme="a" id="extra-nav">
+        <div data-role="popup" id="extra-nav" data-overlay-theme="a" data-dismissible="false">
+        	<a href="#" data-rel="back" data-role="button" data-theme="c" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+        	<div class="ui-grid-solo" style="padding:10px 20px; text-align:center; color:#F00;">
+            	<h3>Tìm địa điểm</h3>
+            </div>
+        	<div class="ui-grid-a">
+                <div class="ui-block-a"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#"><div id="gas-station">Trạm xăng</div></a></div>
+                <div class="ui-block-b"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#"><div id="parking-lot">Bãi đậu xe</div></a></div>
+            </div>
+            <div class="ui-grid-a">
+                <div class="ui-block-a"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#"><div id="get-direction">Tìm đường</div></a></div>
+                <div class="ui-block-b"><a data-role="button" data-theme="none" data-corners="false" data-shadow="false" data-inline="true" href="#"><div id="repair-vehicle">Chỗ sửa xe</div></a></div>
+            </div><!-- /grid-a -->
+        </div><!-- /panel -->
          
-         </div><!-- /panel -->
-         
-         <div data-role="popup" id="help-nav">
+        <div data-role="popup" id="help-nav">
             <ul data-role="listview" data-inset="true" style="min-width:210px;">
                 <li data-theme="a"><a href="#" >Hướng dẫn Tracking</a></li>
-                <li data-theme="a"><a href="#" >Hướng dẫn Thiết lập cảnh báo</a></li>
+                <li data-theme="e"><a href="#panel-fixed-page2" >Hướng dẫn Thiết lập cảnh báo</a></li>
                 <li data-theme="a"><a href="#" >Hướng dẫn Chế độ hiển thị</a></li>
-                <li data-theme="a"><a href="#" >Sử dụng chức năng mở rộng</a></li>
+                <li data-theme="e"><a href="#panel-fixed-page2" >Sử dụng chức năng mở rộng</a></li>
                 <li data-theme="a"><a href="#" >Hỏi đáp từ người dùng</a></li>
             </ul>
-		</div> 
+		</div> <!-- popup -->
 
-        <div data-role="popup" id="popupLogin" data-theme="e" class="ui-corner-all">
-            <form>
-                <div style="padding:10px 20px;">
-                    <h3>Please sign in</h3>
+        <div data-role="popup" id="popupLogin" data-overlay-theme="a" data-dismissible="false"  data-theme="a" class="ui-corner-all">
+        	<a href="#" data-rel="back" data-role="button" data-theme="c" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+            <form>            	
+                <div style="padding:10px 20px;" >
+                    <h3>Bạn muốn theo dõi lộ trình của mình?<br>Vui lòng đăng nhập</h3>
                     <label for="un" class="ui-hidden-accessible">Username:</label>
                     <input type="text" name="user" id="un" value="" placeholder="username" data-theme="a">
                     <label for="pw" class="ui-hidden-accessible">Password:</label>
                     <input type="password" name="pass" id="pw" value="" placeholder="password" data-theme="a">
-                    <button type="submit" data-theme="b" data-icon="check">Sign in</button>
-                </div>
+                    <div class="ui-grid-a">        
+                    	<div class="ui-block-a"><a href="#" data-rel="back" data-role="button" data-theme="c" data-mini="true">Đăng Kí</a></div>
+						<div class="ui-block-b"><a href="#" data-rel="back" data-role="button" data-theme="b" data-mini="true">Theo Dõi</a></div>
+                	</div>
+				</div>	
             </form>
-        </div>               
-         
+        </div><!-- popup -->               
+   
+   		<div data-role="popup" id="confirm-popup" data-overlay-theme="a" data-dismissible="false" data-theme="a" class="ui-corner-all">
+        <div style="padding:10px 10px;">
+            <h4>Bạn thực sự muốn tắt cảnh báo ?</h4>
+            <br/>
+            <div class="ui-grid-a">        
+                <div class="ui-block-a"><a href="#" data-rel="back" data-role="button" data-theme="c" data-mini="true" data-icon="delete">No</a></div>
+                <div class="ui-block-b"><a href="#" data-rel="back" data-role="button" data-theme="b" data-mini="true" data-icon="check">Yes</a></div>
+            </div>
+            </div>
+		</div> <!-- popup -->
+              
         <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="b" id="add-form">
             <form class="userform">
                 <h2>Login</h2>
@@ -181,7 +207,7 @@
                 </div>
             </form>
         </div><!-- /panel -->
-	</div>
+	</section>
     
     <section data-role="page" id="panel-fixed-page2" data-url="panel-fixed-page2" tabindex="0" class="ui-page ui-body-c" style="min-height: 438px;">
     
@@ -198,6 +224,8 @@
         </div><!-- /content -->
     
     </section><!-- /page -->
+
+
  </body>
 </html>
 
