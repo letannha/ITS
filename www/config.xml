@@ -58,10 +58,10 @@
     -->
 
     <!-- Define app icon for each platform. -->
-    <icon src="icon.jpeg" />
+    <icon src="icon.png" />
    
     <!-- Define app splash screen for each platform. -->
-	<gap:splash src="icon.jpeg" gap:platform="android" gap:density="hdpi" />
+	<gap:splash src="icon.png" gap:platform="android" gap:density="hdpi" />
     
     <!--
         Define access to external domains.
