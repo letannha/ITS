@@ -7,27 +7,19 @@
 			<!-- leaflet framework  -->
 	<link rel="stylesheet" 	type="text/css" 	href="leaflet/leaflet.css">
 	<link rel="stylesheet" 	type="text/css" 	href="css/map.css">
-	<script type="text/javascript" 			src = "leaflet/leaflet.js"> </script>
-	<script type="text/javascript" 			src = "leaflet/leaflet.spin.js"> </script>
-	<script type="text/javascript" 			src = "leaflet/spin.js"> </script>
-
-	<script src="js/l.control.geosearch.js"></script>
-	<script src="js/l.geosearch.provider.openstreetmap.js"></script>
-	<link rel="stylesheet" href="css/l.geosearch.css" />
+	<script type="text/javascript" 				src = "leaflet/leaflet.js"> </script>
 	
-	<link rel="stylesheet" href="css/Control.Loading.css" />
-	 <script src="js/Control.Loading.js" ></script>
-	 
-	<script src = "data/static_data.js" ></script>
-
+			<!-- Jquery Mobile  -->
+	<link rel="stylesheet" type="text/css" 		href="css/style.css">
+	<link 	rel="stylesheet" 	type="text/css" href="js/jquery.mobile-1.3.2.min.css">
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.3.2.min.js"></script>
+		<!-- Phonegap  -->
+	<script src = "data/data.js" > </script>
 	<script src = "phonegap.js" > </script>
-
 	<script type="text/javascript" charset="utf-8"> 
 	var pgr = false;
 	var map;
-		var layer_traffic={};
-		var me = {};
-		var R = 1000;
 	
 		function onBodyLoad() {             
 			//alert("onBodyLoad");            
@@ -37,7 +29,7 @@
 	function onDeviceReady() {            
 		//alert("onDeviceReady");        
 		pgr = true; 
-		//getLocation();
+		getLocation();
 	}
 	
 	function getLocation() {        
@@ -54,8 +46,6 @@
 		alert("onLocationSuccess");
 		var lat = loc.coords.latitude;
 		var lng = loc.coords.longitude ;
-		me = loc;
-		
 		// add an OpenStreetMap tile layer
 		map = new L.Map('map');
 
@@ -73,137 +63,21 @@
 		map.addLayer(marker);
 		marker.bindPopup("Hello! <br /> I'm here")
 			  .openPopup(); 
-		 getData();
 	}	
 	 function onGeolocationError(e) {        
 		alert("Geolocation error: #" + e.code + "\n" +  e.message);      
 	}
 	function getData() {
-		//obj deoJson
-	var geo={};
-		geo['type'] = "FeatureCollection";
-		geo['features'] = new Array();       //1
-		//Obj features trong mang geo['features']
-		var feature1 = {};					//2
-		feature1['type'] = "Feature";
-		feature1['geometry'] = {};			//3
-		feature1['properties']= {"color": "value1"};
-		
-		var feature2 = {};					//2
-		feature2['type'] = "Feature";
-		feature2['geometry'] = {};			//3
-		feature2['properties']= {"color": "value2"};
-		
-		var feature3 = {};					//2
-		feature3['type'] = "Feature";
-		feature3['geometry'] = {};			//3
-		feature3['properties']= {"color": "value3"};
-		
-		//Obj in feature['geometry']		//4
-		var geometry1 = {};
-		geometry1['type'] = "MultiLineString";
-		geometry1['coordinates'] = new Array();			//5
-		
-		var geometry2 = {};
-		geometry2['type'] = "MultiLineString";
-		geometry2['coordinates'] = new Array();
-		
-		var geometry3 = {};
-		geometry3['type'] = "MultiLineString";
-		geometry3['coordinates'] = new Array();
-		//======END==============================
-		var street = new Array();
-		var segment = new Array();
-		//var latPos = me.latlng.lat;
-		//var longPos = me.latlng.lng;
-		var latPos =me.coords.latitude;
-		var longPos = me.coords.longitude ;
-
-		var url = "http://traffic.hcmut.edu.vn/hcm/rest/segmentSpeedMongo?R=" +
-						R +"&latPos="+latPos+"&longPos="+longPos; 
-		 map.spin(true);
-			$.ajax({
-				url:url,
-				type:"GET",
-				dataType:"json",
-				success: function(data){
-				var len = data.resource.length;
-				for(var i=0;i<len;i++) {
-					var lenseg = data.resource[i].segment.length;
-					if(lenseg==null) {
-						var id = parseInt(data.resource[i].segment.segmentId)-1;
-						var speed = data.resource[i].segment.speed;
-						if(speed <10) {
-								segment.push( 	[val[id][3],val[id][2]],
-													[val[id][5],val[id][4]] ) ;	
-		
-								geometry1['coordinates'].push(segment);
-								segment = new Array();
-							}
+		L.geoJson(data, {
+			style: function(feature) {
+			switch (feature.properties.prop0) {
+				case 'value1': return {color: "#ff0000"};
+				case 'value2':   return {color: "#0000ff"};
+				case 'value3':   return {color: "#00FF00"};
 				
-							else if(speed <=20) {
-								segment.push( 	[val[id][3],val[id][2]],
-												[val[id][5],val[id][4]] ) ;	
-								geometry2['coordinates'].push(segment);
-								segment = new Array();
-							}
-							else  {
-								segment.push( 	[val[id][3],val[id][2]],
-												[val[id][5],val[id][4]] ) ;	
-								geometry3['coordinates'].push(segment);
-								segment = new Array();
-							}
-					}
-					else {
-						for(var j=0;j<lenseg;j++) {
-							var id = parseInt(data.resource[i].segment[j].segmentId)-1;
-							var speed = data.resource[i].segment[j].speed;
-							if(speed <10) {
-								segment.push( 	[val[id][3],val[id][2]],
-											[val[id][5],val[id][4]] ) ;	
-			
-								geometry1['coordinates'].push(segment);
-								segment = new Array();
-							}
-					
-							else if(speed <=20) {
-								segment.push( 	[val[id][3],val[id][2]],
-											[val[id][5],val[id][4]] ) ;	
-								geometry2['coordinates'].push(segment);
-								segment = new Array();
-							}
-							else  {
-								segment.push( 	[val[id][3],val[id][2]],
-											[val[id][5],val[id][4]] ) ;	
-								geometry3['coordinates'].push(segment);
-								segment = new Array();
-							}
-					}
-				}
-				}					
-				feature1['geometry'] = geometry1;
-				feature2['geometry'] = geometry2;
-				feature3['geometry'] = geometry3;
-				geo['features'].push(feature1);
-				geo['features'].push(feature2);
-				geo['features'].push(feature3);	
-				//console.log(geo);
-				
-				layer_traffic = L.geoJson(geo, {
-					style: function(feature) {
-					switch (feature.properties.color) {
-						case 'value1': return {color: "#FF0000"};
-						case 'value2':   return {color: "#0033FF"};
-						case 'value3': return {color: "#00FF00"};
-						}
-					}
-				});
-				
-				layer_traffic.addTo(map);
-				map.fitBounds(layer_traffic.getBounds());
-				 map.spin(false);
 			}
-		});
+		}
+		}).addTo(map);
 	}		
 	</script>
   </head>
@@ -212,7 +86,6 @@
 	<section data-role="page" id="map-page" data-url="map-page">
 		<div data-role="header" data-theme="none" data-position="fixed" data-fullscreen="true">
 		<a href="#" data-role="button" data-icon="gear" onclick = "getData();" class="ui-btn-left">OK!</a>
-		<a href="#" data-role="button" data-icon="gear" onclick = "getData();" class="ui-btn-right">Map!</a>
         	<div class="ui-grid-b">
                 <div class="ui-block-a"><div class="ui-bar logo"></div></div>
                 <div class="ui-block-b"><a href="#confirm-popup" data-role="button" data-rel="popup" data-position-to="window" data-theme="none" data-corners="false" data-shadow="false" data-inline="true"><div class="icon-alert"></div></a></div>
